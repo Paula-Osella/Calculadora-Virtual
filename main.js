@@ -17,7 +17,7 @@ if (semanasDelmes == 4 || semanasDelmes == 5) {
     }
     if (gananciaDelmes > gastosDelmes) {
         let Resta = parseInt(gananciaDelmes - gastosDelmes)
-        let restaResultado = parseInt(alert("El resultado luego de pagar tus cuentas sera de" + " " + "$" + Resta))
+        let restaResultado = parseInt(alert("El resultado luego de tus gastos semanales sera de" + " " + "$" + Resta))
         let divisor = parseInt(Resta / semanasDelmes)
         let resultadoFinal = parseInt(alert("En base a tus gastos, terminarias ahorrando" + " " + "$" + divisor + " " + "por semana"))
     } else {
