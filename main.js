@@ -1,136 +1,211 @@
 let usuario = {
     nombre: "",
-    tarjetas: [], // Array para almacenar las tarjetas de crédito
-    gastos: [] // Array para almacenar todos los gastos
+    tarjetas: [],
+    gastos: []
 };
 
-// Función de bienvenida
-function bienvenida() {
-    let nombreUsuario
-    do {
-        nombreUsuario = prompt("Ingrese su nombre").trim()
-    } while (!validarNombre(nombreUsuario))
-    alert(`Bienvenido/a ${nombreUsuario} a tu ahorrador virtual`)
-    return nombreUsuario
-}
+document.getElementById('iniciar').addEventListener('click', function () {
+    let nombreUsuario = document.getElementById('nombreUsuario').value.trim();
+    if (validarNombre(nombreUsuario)) {
+        usuario.nombre = nombreUsuario;
+        guardarUsuarioEnLocalStorage();
+        document.getElementById('bienvenida');
 
-// Función para verificar si el nombre de usuario es válido
-function validarNombre(nombre) {
-    return isNaN(nombre) && nombre.trim() !== ""
-}
-
-// Función para validar números positivos
-function validarNumeroPositivo(numero) {
-    return !isNaN(numero) && parseFloat(numero) > 0
-}
-
-// Función para agregar tarjeta de crédito
-function agregarTarjeta() {
-    let gastosTarjeta
-    do {
-        gastosTarjeta = parseFloat(prompt("Ingrese los gastos mensuales de la tarjeta de crédito"))
-    } while (!validarNumeroPositivo(gastosTarjeta))
-
-    let tarjeta = { tipo: 'Tarjeta de Crédito', descripcion: 'Gastos de tarjeta de crédito', monto: gastosTarjeta }
-    usuario.tarjetas.push(tarjeta)
-    usuario.gastos.push(tarjeta)
-}
-
-// Función para calcular el ahorro
-function calcularAhorro(ganancia, gastos) {
-    let ahorroMes = ganancia - gastos
-    let ahorroSemana = ahorroMes / 4
-    return { semana: ahorroSemana, mes: ahorroMes }
-}
-
-// Función para mostrar todos los gastos
-function mostrarGastos() {
-    let mensaje = "Gastos ingresados:\n"
-    usuario.gastos.forEach((gasto, index) => {
-        mensaje += `${index + 1}. ${gasto.tipo} - ${gasto.descripcion}: $${gasto.monto.toFixed(2)}\n`
-    })
-    alert(mensaje)
-}
-
-// Función para buscar un gasto específico
-function buscarGasto(descripcion) {
-
-        return usuario.gastos.filter(gasto => gasto.descripcion.toLowerCase().includes(descripcion.toLowerCase()))
-}
-
-// Función principal
-function iniciarPrograma() {
-    // Datos iniciales
-    usuario.nombre = bienvenida()
-
-    // Consulta sobre duración del cálculo
-    let semanas = parseInt(prompt("¿Cuántas semanas desea calcular sus gastos?"))
-    while (!validarNumeroPositivo(semanas)) {
-        semanas = parseInt(prompt("Por favor, ingrese un número válido de semanas"))
+        document.getElementById('configuracion').style.display = 'block';
+    } else {
+        alert("Por favor, ingrese un nombre válido.");
     }
+});
 
-    // Ganancia del mes
-    let ganancia = parseFloat(prompt("Ingrese su ganancia mensual"))
-    while (!validarNumeroPositivo(ganancia)) {
-        ganancia = parseFloat(prompt("Por favor, ingrese un número válido para su ganancia"))
-    }
 
-    // Consulta sobre los gastos típicos
-    let gastosServicios = parseFloat(prompt("Ingrese sus gastos en servicios (luz, internet, etc.)"))
-    while (!validarNumeroPositivo(gastosServicios)) {
-        gastosServicios = parseFloat(prompt("Por favor, ingrese un número válido para sus gastos en servicios"))
-    }
-    usuario.gastos.push({ tipo: 'Servicio', descripcion: 'Gastos en servicios', monto: gastosServicios })
+document.getElementById("nombreUsuario").addEventListener('keydown', function(event) {
+    if (event.key === "Enter"){
+        let nombreUsuario = document.getElementById('nombreUsuario').value.trim();
+        if (validarNombre(nombreUsuario)) {
+            usuario.nombre = nombreUsuario;
+            guardarUsuarioEnLocalStorage();
+            document.getElementById('bienvenida');
 
-    let gastosComidaSemana = parseFloat(prompt("Ingrese sus gastos totales de comida para las semanas que está calculando"))
-    while (!validarNumeroPositivo(gastosComidaSemana)) {
-        gastosComidaSemana = parseFloat(prompt("Por favor, ingrese un número válido para sus gastos en comida"))
-    }
-    usuario.gastos.push({ tipo: 'Comida', descripcion: 'Gastos en comida por semana', monto: gastosComidaSemana })
-
-    // Consulta sobre gastos de tarjeta de crédito
-    let tieneTarjeta = prompt("¿Tiene gastos en su tarjeta de crédito? (Sí/No)").toLowerCase()
-    if (tieneTarjeta === "sí" || tieneTarjeta === "si") {
-        let agregarOtraTarjeta = "sí"
-        while (agregarOtraTarjeta === "sí" || agregarOtraTarjeta === "si") {
-            agregarTarjeta()
-            agregarOtraTarjeta = prompt("¿Desea agregar otra tarjeta de crédito? (Sí/No)").toLowerCase()
-        }
-    }
-
-    // Cálculo de gastos totales
-    let gastosTotales = usuario.gastos.reduce((total, gasto) => total + gasto.monto, 0)
-
-    // Cálculo de ahorro
-    let ahorro = calcularAhorro(ganancia, gastosTotales)
-
-    // Mostrar resultados de ahorro
-    alert(`Estás ahorrando $${ahorro.semana.toFixed(2)} por semana y $${ahorro.mes.toFixed(2)} en el mes.`)
-
-    // Mostrar todos los gastos
-    mostrarGastos()
-
-    // Preguntar si desea buscar algún gasto
-    let buscarMasGastos = prompt("¿Desea buscar algún gasto con una palabra clave? (Sí/No)").toLowerCase()
-    while (buscarMasGastos === "sí" || buscarMasGastos === "si") {
-        let gastoBuscar = prompt("Ingrese una palabra clave para buscar un gasto específico").trim()
-        let resultadosBusqueda = buscarGasto(gastoBuscar)
-
-        if (resultadosBusqueda.length > 0 && gastoBuscar !== "" && gasto.includes(gastoBuscar)) {
-            let mensaje = `Se encontraron ${resultadosBusqueda.length} gastos que coinciden con "${gastoBuscar}":\n`
-            resultadosBusqueda.forEach((gasto, index) => {
-                mensaje += `Gasto ${index + 1}: ${gasto.tipo} - ${gasto.descripcion} - Monto: $${gasto.monto.toFixed(2)}\n`
-            });
-            alert(mensaje)
+            document.getElementById('configuracion').style.display = 'block';
         } else {
-            alert(`No se encontraron gastos que coincidan con "${gastoBuscar}".`)
+        alert("Por favor, ingrese un nombre válido.");
         }
-
-        buscarMasGastos = prompt("¿Desea intentar buscar nuevamente? (Sí/No)").toLowerCase()
     }
+});
 
-    alert("Gracias por elegir nuestro servicio!")
+
+
+function validarNombre(nombre) {
+    return isNaN(nombre) && nombre.trim() !== "";
 }
 
-// Ejecutar función principal
-iniciarPrograma()
+function validarNumeroPositivo(numero) {
+    return !isNaN(numero) && parseFloat(numero) > 0;
+}
+
+document.getElementById('calcular').addEventListener('click', function () {
+    let semanas = parseInt(document.getElementById('semanas').value);
+    let ganancia = parseFloat(document.getElementById('ganancia').value);
+    let gastosServicios = parseFloat(document.getElementById('gastosServicios').value);
+    let gastosComidaSemana = parseFloat(document.getElementById('gastosComidaSemana').value);
+
+    if (validarNumeroPositivo(semanas) && validarNumeroPositivo(ganancia) &&
+        validarNumeroPositivo(gastosServicios) && validarNumeroPositivo(gastosComidaSemana)) {
+
+        usuario.gastos.push({ tipo: 'Servicio', descripcion: 'Gastos en servicios', monto: gastosServicios });
+        usuario.gastos.push({ tipo: 'Comida', descripcion: 'Gastos en comida por semana', monto: gastosComidaSemana });
+
+        let gastosTotales = usuario.gastos.reduce((total, gasto) => total + gasto.monto, 0);
+        let ahorro = calcularAhorro(ganancia, gastosTotales);
+
+        document.getElementById('ahorroSemana').textContent = `Estás ahorrando $${ahorro.semana.toFixed(2)} por semana.`;
+        document.getElementById('ahorroMes').textContent = `Estás ahorrando $${ahorro.mes.toFixed(2)} en el mes.`;
+
+        document.getElementById('configuracion').style.display = 'none';
+        document.getElementById('resultado').style.display = 'block';
+        // No guardar gastos en localStorage
+        guardarUsuarioEnLocalStorage();
+    } else {
+        alert("Por favor, ingrese valores válidos.");
+    }
+});
+
+function calcularAhorro(ganancia, gastos) {
+    let ahorroMes = ganancia - gastos;
+    let ahorroSemana = ahorroMes / 4;
+    return { semana: ahorroSemana, mes: ahorroMes };
+}
+
+document.getElementById('mostrarGastos').addEventListener('click', function () {
+    document.getElementById('resultado').style.display = 'none';
+    document.getElementById('gastos').style.display = 'block';
+    mostrarGastos();
+});
+
+function mostrarGastos() {
+    let listaGastos = document.getElementById('listaGastos');
+    if (!listaGastos) {
+        console.error('Elemento listaGastos no encontrado');
+        return;
+    }
+
+    console.log('Llamando a mostrarGastos');
+    console.log('Gastos actuales:', usuario.gastos);
+
+    listaGastos.innerHTML = '';
+
+    if (!Array.isArray(usuario.gastos)) {
+        console.error('usuario.gastos no es un arreglo');
+        return;
+    }
+
+    usuario.gastos.forEach((gasto, index) => {
+        console.log(`Agregando gasto: ${index + 1}. ${gasto.tipo} - ${gasto.descripcion}: $${gasto.monto.toFixed(2)}`);
+        listaGastos.innerHTML += `<p>${index + 1}. ${gasto.tipo} - ${gasto.descripcion}: $${gasto.monto.toFixed(2)}</p>`;
+    });
+}
+
+document.getElementById('buscar').addEventListener('click', function () {
+    let descripcion = document.getElementById('buscarGasto').value.trim();
+    let resultados = buscarGasto(descripcion);
+    let resultadosBusqueda = document.getElementById('resultadosBusqueda');
+    resultadosBusqueda.innerHTML = '';
+
+    if (resultados.length > 0 && descripcion !== "") {
+        resultados.forEach((gasto, index) => {
+            resultadosBusqueda.innerHTML += `<p>${index + 1}. ${gasto.tipo} - ${gasto.descripcion}: $${gasto.monto.toFixed(2)}</p>`;
+        });
+    } else {
+        resultadosBusqueda.innerHTML = `<p>No se encontraron gastos que coincidan con "${descripcion}".</p>`;
+    }
+});
+
+function buscarGasto(descripcion) {
+    return usuario.gastos.filter(gasto => gasto.descripcion.toLowerCase().includes(descripcion.toLowerCase()));
+}
+
+document.getElementById('agregarTarjeta').addEventListener('click', function () {
+    let gastosTarjeta = parseFloat(prompt("Ingrese los gastos mensuales de la tarjeta de crédito"));
+    while (!validarNumeroPositivo(gastosTarjeta)) {
+        gastosTarjeta = parseFloat(prompt("Por favor, ingrese un número válido para los gastos de la tarjeta de crédito"));
+    }
+
+    let tarjeta = { tipo: 'Tarjeta de Crédito', descripcion: 'Gastos de tarjeta de crédito', monto: gastosTarjeta };
+    usuario.tarjetas.push(tarjeta);
+    usuario.gastos.push(tarjeta);
+    // No guardar gastos en localStorage
+    guardarUsuarioEnLocalStorage();
+});
+
+document.getElementById('finalizar').addEventListener('click', function () {
+    document.getElementById('gastos').style.display = 'none';
+    document.getElementById('saludoFinal').style.display = 'block';
+    document.getElementById('saludoUsuario').textContent = `¡Gracias ${usuario.nombre} por usar nuestra aplicación!`;
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    let datosUsuario = localStorage.getItem('usuario');
+    if (datosUsuario) {
+        let datos = JSON.parse(datosUsuario);
+        usuario.nombre = datos.nombre;
+        usuario.tarjetas = datos.tarjetas || [];
+        
+        // Mostrar la sección de configuración al cargar los datos del usuario
+        document.getElementById('configuracion').classList.add('mostrar');
+    } else {
+        // Mostrar la sección de bienvenida si no hay datos de usuario en el localStorage
+        document.getElementById('bienvenida').classList.add('mostrar');
+    }
+});
+
+document.getElementById('iniciar').addEventListener('click', function () {
+    let nombreUsuario = document.getElementById('nombreUsuario').value.trim();
+    if (validarNombre(nombreUsuario)) {
+        usuario.nombre = nombreUsuario;
+        guardarUsuarioEnLocalStorage();
+        
+        // Ocultar la sección de bienvenida y mostrar la de configuración
+        document.getElementById('bienvenida').classList.remove('mostrar');
+        document.getElementById('configuracion').classList.add('mostrar');
+    } else {
+        alert("Por favor, ingrese un nombre válido.");
+    }
+});
+
+function guardarUsuarioEnLocalStorage() {
+    // Crear un objeto con solo las propiedades que deseas almacenar
+    let usuarioParaGuardar = {
+        nombre: usuario.nombre,
+        tarjetas: usuario.tarjetas
+    };
+    localStorage.setItem('usuario', JSON.stringify(usuarioParaGuardar));
+}
+
+const toggleThemeButton = document.getElementById('toggleTheme');
+const body = document.body;
+
+// Agrega un event listener al botón de alternancia de tema
+toggleThemeButton.addEventListener('click', function() {
+    // Verifica si la clase dark-theme está presente en el cuerpo del documento
+    const isDarkMode = body.classList.contains('dark-theme');
+
+    // Si el modo oscuro está activo, quítalo; de lo contrario, actívalo
+    if (isDarkMode) {
+        body.classList.remove('dark-theme');
+        // Guarda la preferencia del usuario en localStorage
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.classList.add('dark-theme');
+        // Guarda la preferencia del usuario en localStorage
+        localStorage.setItem('theme', 'dark');
+    }
+});
+
+// Al cargar la página, verifica si el usuario ha seleccionado un tema anteriormente y aplicalo
+document.addEventListener('DOMContentLoaded', function() {
+    const theme = localStorage.getItem('theme');
+    if (theme === 'dark') {
+        body.classList.add('dark-theme');
+    }
+});

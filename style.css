@@ -1,0 +1,21 @@
+/* Estilo para ocultar un elemento */
+.oculto {
+    display: none;
+}
+
+/* Estilo para mostrar un elemento */
+.mostrar {
+    display: block;
+}
+
+.ocultar{
+    display: none;
+    
+}
+
+.dark-theme {
+    background-color: #333;
+    color: #fff;
+    
+}
+

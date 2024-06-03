@@ -1,12 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Ahorrador Virtual</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+<link rel="stylesheet" href="style.css">
+    
 </head>
 <body>
 
-<script src="main.js"></script>
+    <button id="toggleTheme"><i class="bi bi-moon-fill"></i></button>
+    
+
+
+    <div id="app" >
+        <div id="bienvenida">
+            <h2>Bienvenido/a a tu Ahorrador Virtual</h2>
+            <input type="text" id="nombreUsuario" placeholder="Ingrese su nombre">
+            <button id="iniciar">Iniciar</button>
+        </div>
+        
+        <div id="configuracion" class="ocultar">
+            <h2>Configuración de Gastos</h2>
+            <label for="semanas">¿Cuántas semanas desea calcular sus gastos?</label>
+            <input type="number" id="semanas">
+            <label for="ganancia">Ingrese su ganancia mensual</label>
+            <input type="number" id="ganancia">
+            <label for="gastosServicios">Ingrese sus gastos en servicios (luz, internet, etc.)</label>
+            <input type="number" id="gastosServicios">
+            <label for="gastosComidaSemana">Ingrese sus gastos totales de comida para las semanas que está calculando</label>
+            <input type="number" id="gastosComidaSemana">
+            <button id="agregarTarjeta">Agregar Tarjeta de Crédito</button>
+            <button id="calcular">Calcular Ahorro</button>
+        </div>
+
+        <div id="resultado" class="ocultar">
+            <h2>Resultado de Ahorro</h2>
+            <p id="ahorroSemana"></p>
+            <p id="ahorroMes"></p>
+            <button id="mostrarGastos">Mostrar Gastos</button>
+        </div>
+
+        <div id="gastos" class="ocultar">
+            <h2>Gastos Ingresados</h2>
+            <div id="listaGastos"></div>
+            <input type="text" id="buscarGasto" placeholder="Buscar gasto">
+            <button id="buscar">Buscar</button>
+            <div id="resultadosBusqueda"></div>
+            <button id="finalizar">Finalizar</button>
+        </div>
+        
+        <div id="saludoFinal" class="ocultar">
+            <h2 id="saludoUsuario"></h2>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    
 </body>
 </html>
