@@ -151,10 +151,10 @@ document.addEventListener('DOMContentLoaded', function () {
         usuario.nombre = datos.nombre;
         usuario.tarjetas = datos.tarjetas || [];
         
-        // Mostrar la sección de configuración al cargar los datos del usuario
+
         document.getElementById('configuracion').classList.add('mostrar');
     } else {
-        // Mostrar la sección de bienvenida si no hay datos de usuario en el localStorage
+
         document.getElementById('bienvenida').classList.add('mostrar');
     }
 });
@@ -165,7 +165,7 @@ document.getElementById('iniciar').addEventListener('click', function () {
         usuario.nombre = nombreUsuario;
         guardarUsuarioEnLocalStorage();
         
-        // Ocultar la sección de bienvenida y mostrar la de configuración
+    
         document.getElementById('bienvenida').classList.remove('mostrar');
         document.getElementById('configuracion').classList.add('mostrar');
     } else {
@@ -174,7 +174,7 @@ document.getElementById('iniciar').addEventListener('click', function () {
 });
 
 function guardarUsuarioEnLocalStorage() {
-    // Crear un objeto con solo las propiedades que deseas almacenar
+
     let usuarioParaGuardar = {
         nombre: usuario.nombre,
         tarjetas: usuario.tarjetas
@@ -185,24 +185,22 @@ function guardarUsuarioEnLocalStorage() {
 const toggleThemeButton = document.getElementById('toggleTheme');
 const body = document.body;
 
-// Agrega un event listener al botón de alternancia de tema
+
 toggleThemeButton.addEventListener('click', function() {
-    // Verifica si la clase dark-theme está presente en el cuerpo del documento
+
     const isDarkMode = body.classList.contains('dark-theme');
 
-    // Si el modo oscuro está activo, quítalo; de lo contrario, actívalo
     if (isDarkMode) {
         body.classList.remove('dark-theme');
-        // Guarda la preferencia del usuario en localStorage
+
         localStorage.setItem('theme', 'light');
     } else {
         body.classList.add('dark-theme');
-        // Guarda la preferencia del usuario en localStorage
+
         localStorage.setItem('theme', 'dark');
     }
 });
 
-// Al cargar la página, verifica si el usuario ha seleccionado un tema anteriormente y aplicalo
 document.addEventListener('DOMContentLoaded', function() {
     const theme = localStorage.getItem('theme');
     if (theme === 'dark') {
