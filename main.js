@@ -81,7 +81,15 @@ function mostrarGastos() {
     });
 }
 
+
 document.getElementById('buscar').addEventListener('click', function () {
+    buscar();
+});
+
+
+document.getElementById('buscarGasto').addEventListener('keydown', event => event.key === "Enter" ? buscar() : null);
+
+function buscar() {
     let descripcion = document.getElementById('buscarGasto').value.trim();
     let resultados = buscarGasto(descripcion);
     let resultadosBusqueda = document.getElementById('resultadosBusqueda');
@@ -89,8 +97,8 @@ document.getElementById('buscar').addEventListener('click', function () {
     resultados.length > 0 && descripcion !== ""
         ? resultados.forEach((gasto, index) => resultadosBusqueda.innerHTML += `<p>${index + 1}. ${gasto.tipo} - ${gasto.descripcion}: $${gasto.monto.toFixed(2)}</p>`)
         : resultadosBusqueda.innerHTML = `<p>No se encontraron gastos que coincidan con "${descripcion}".</p>`;
+}
 
-});
 
 function buscarGasto(descripcion) {
     return usuario.gastos.filter(gasto => gasto.descripcion.toLowerCase().includes(descripcion.toLowerCase()));
