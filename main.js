@@ -32,7 +32,6 @@ document.getElementById('calcular').addEventListener('click', function () {
         usuario.gastos.push({ tipo: 'Servicio', descripcion: 'Gastos en servicios', monto: gastosServicios }),
         usuario.gastos.push({ tipo: 'Comida', descripcion: 'Gastos en comida por semana', monto: gastosComidaSemana }),
 
-        // Usar let dentro del bloque ternario puede causar errores, por lo que se separan las declaraciones
         gastosTotales = usuario.gastos.reduce((total, gasto) => total + gasto.monto, 0),
         ahorro = calcularAhorro(ganancia, gastosTotales),
 
@@ -53,7 +52,7 @@ function calcularAhorro(ganancia, gastos) {
     return { semana: ahorroSemana, mes: ahorroMes };
 }
 
-document.getElementById('mostrarGastos').addEventListener('click', function () {
+document.getElementById('mostrarGastos').addEventListener('click', function ()  {
     document.getElementById('resultado').style.display = 'none';
     document.getElementById('gastos').style.display = 'block';
     mostrarGastos();
@@ -93,7 +92,6 @@ document.getElementById('buscar').addEventListener('click', function () {
 
 });
 
-
 function buscarGasto(descripcion) {
     return usuario.gastos.filter(gasto => gasto.descripcion.toLowerCase().includes(descripcion.toLowerCase()));
 
@@ -128,18 +126,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('bienvenida').classList.add('mostrar')
     );
 });
-
-
-document.getElementById('iniciar').addEventListener('click', function () {
-    let nombreUsuario = document.getElementById('nombreUsuario').value.trim();
-    validarNombre(nombreUsuario) ? (
-        usuario.nombre = nombreUsuario,
-        guardarUsuarioEnLocalStorage(),
-        document.getElementById('bienvenida').classList.remove('mostrar'),
-        document.getElementById('configuracion').classList.add('mostrar')
-    ) : alert("Por favor, ingrese un nombre válido.");
-});
-
 
 function guardarUsuarioEnLocalStorage() {
     let usuarioParaGuardar = {
