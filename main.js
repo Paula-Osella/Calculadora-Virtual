@@ -4,36 +4,9 @@ let usuario = {
     gastos: []
 };
 
-document.getElementById('iniciar').addEventListener('click', function () {
-    let nombreUsuario = document.getElementById('nombreUsuario').value.trim();
-    if (validarNombre(nombreUsuario)) {
-        usuario.nombre = nombreUsuario;
-        guardarUsuarioEnLocalStorage();
-        document.getElementById('bienvenida');
+document.getElementById('iniciar').addEventListener('click', () => validarNombre(nombreUsuario = document.getElementById('nombreUsuario').value.trim()) ? (usuario.nombre = nombreUsuario, guardarUsuarioEnLocalStorage(), document.getElementById('bienvenida'), document.getElementById('configuracion').style.display = 'block') : alert("Por favor, ingrese un nombre válido."));
 
-        document.getElementById('configuracion').style.display = 'block';
-    } else {
-        alert("Por favor, ingrese un nombre válido.");
-    }
-});
-
-
-document.getElementById("nombreUsuario").addEventListener('keydown', function(event) {
-    if (event.key === "Enter"){
-        let nombreUsuario = document.getElementById('nombreUsuario').value.trim();
-        if (validarNombre(nombreUsuario)) {
-            usuario.nombre = nombreUsuario;
-            guardarUsuarioEnLocalStorage();
-            document.getElementById('bienvenida');
-
-            document.getElementById('configuracion').style.display = 'block';
-        } else {
-        alert("Por favor, ingrese un nombre válido.");
-        }
-    }
-});
-
-
+document.getElementById("nombreUsuario").addEventListener('keydown', event => event.key === "Enter" ? (validarNombre(nombreUsuario = document.getElementById('nombreUsuario').value.trim()) ? (usuario.nombre = nombreUsuario, guardarUsuarioEnLocalStorage(), document.getElementById('configuracion').style.display = 'block') : alert("Por favor, ingrese un nombre válido.")) : null);
 
 function validarNombre(nombre) {
     return isNaN(nombre) && nombre.trim() !== "";
@@ -44,31 +17,35 @@ function validarNumeroPositivo(numero) {
 }
 
 document.getElementById('calcular').addEventListener('click', function () {
-    let semanas = parseInt(document.getElementById('semanas').value);
-    let ganancia = parseFloat(document.getElementById('ganancia').value);
-    let gastosServicios = parseFloat(document.getElementById('gastosServicios').value);
-    let gastosComidaSemana = parseFloat(document.getElementById('gastosComidaSemana').value);
+    let { value: semanas } = document.getElementById('semanas');
+    let { value: ganancia } = document.getElementById('ganancia');
+    let { value: gastosServicios } = document.getElementById('gastosServicios');
+    let { value: gastosComidaSemana } = document.getElementById('gastosComidaSemana');
 
-    if (validarNumeroPositivo(semanas) && validarNumeroPositivo(ganancia) &&
-        validarNumeroPositivo(gastosServicios) && validarNumeroPositivo(gastosComidaSemana)) {
+    semanas = parseInt(semanas);
+    ganancia = parseFloat(ganancia);
+    gastosServicios = parseFloat(gastosServicios);
+    gastosComidaSemana = parseFloat(gastosComidaSemana);
 
-        usuario.gastos.push({ tipo: 'Servicio', descripcion: 'Gastos en servicios', monto: gastosServicios });
-        usuario.gastos.push({ tipo: 'Comida', descripcion: 'Gastos en comida por semana', monto: gastosComidaSemana });
+    const validInputs = [semanas, ganancia, gastosServicios, gastosComidaSemana].every(validarNumeroPositivo);
+    validInputs ? (
+        usuario.gastos.push({ tipo: 'Servicio', descripcion: 'Gastos en servicios', monto: gastosServicios }),
+        usuario.gastos.push({ tipo: 'Comida', descripcion: 'Gastos en comida por semana', monto: gastosComidaSemana }),
 
-        let gastosTotales = usuario.gastos.reduce((total, gasto) => total + gasto.monto, 0);
-        let ahorro = calcularAhorro(ganancia, gastosTotales);
+        // Usar let dentro del bloque ternario puede causar errores, por lo que se separan las declaraciones
+        gastosTotales = usuario.gastos.reduce((total, gasto) => total + gasto.monto, 0),
+        ahorro = calcularAhorro(ganancia, gastosTotales),
 
-        document.getElementById('ahorroSemana').textContent = `Estás ahorrando $${ahorro.semana.toFixed(2)} por semana.`;
-        document.getElementById('ahorroMes').textContent = `Estás ahorrando $${ahorro.mes.toFixed(2)} en el mes.`;
+        document.getElementById('ahorroSemana').textContent = `Estás ahorrando $${ahorro.semana.toFixed(2)} por semana.`,
+        document.getElementById('ahorroMes').textContent = `Estás ahorrando $${ahorro.mes.toFixed(2)} en el mes.`,
 
-        document.getElementById('configuracion').style.display = 'none';
-        document.getElementById('resultado').style.display = 'block';
-        // No guardar gastos en localStorage
-        guardarUsuarioEnLocalStorage();
-    } else {
-        alert("Por favor, ingrese valores válidos.");
-    }
+        document.getElementById('configuracion').style.display = 'none',
+        document.getElementById('resultado').style.display = 'block',
+
+        guardarUsuarioEnLocalStorage()
+    ) : alert("Por favor, ingrese valores válidos.");
 });
+
 
 function calcularAhorro(ganancia, gastos) {
     let ahorroMes = ganancia - gastos;
@@ -110,18 +87,16 @@ document.getElementById('buscar').addEventListener('click', function () {
     let resultados = buscarGasto(descripcion);
     let resultadosBusqueda = document.getElementById('resultadosBusqueda');
     resultadosBusqueda.innerHTML = '';
+    resultados.length > 0 && descripcion !== ""
+        ? resultados.forEach((gasto, index) => resultadosBusqueda.innerHTML += `<p>${index + 1}. ${gasto.tipo} - ${gasto.descripcion}: $${gasto.monto.toFixed(2)}</p>`)
+        : resultadosBusqueda.innerHTML = `<p>No se encontraron gastos que coincidan con "${descripcion}".</p>`;
 
-    if (resultados.length > 0 && descripcion !== "") {
-        resultados.forEach((gasto, index) => {
-            resultadosBusqueda.innerHTML += `<p>${index + 1}. ${gasto.tipo} - ${gasto.descripcion}: $${gasto.monto.toFixed(2)}</p>`;
-        });
-    } else {
-        resultadosBusqueda.innerHTML = `<p>No se encontraron gastos que coincidan con "${descripcion}".</p>`;
-    }
 });
+
 
 function buscarGasto(descripcion) {
     return usuario.gastos.filter(gasto => gasto.descripcion.toLowerCase().includes(descripcion.toLowerCase()));
+
 }
 
 document.getElementById('agregarTarjeta').addEventListener('click', function () {
@@ -133,7 +108,6 @@ document.getElementById('agregarTarjeta').addEventListener('click', function () 
     let tarjeta = { tipo: 'Tarjeta de Crédito', descripcion: 'Gastos de tarjeta de crédito', monto: gastosTarjeta };
     usuario.tarjetas.push(tarjeta);
     usuario.gastos.push(tarjeta);
-    // No guardar gastos en localStorage
     guardarUsuarioEnLocalStorage();
 });
 
@@ -146,35 +120,28 @@ document.getElementById('finalizar').addEventListener('click', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
     let datosUsuario = localStorage.getItem('usuario');
-    if (datosUsuario) {
-        let datos = JSON.parse(datosUsuario);
-        usuario.nombre = datos.nombre;
-        usuario.tarjetas = datos.tarjetas || [];
-        
-
-        document.getElementById('configuracion').classList.add('mostrar');
-    } else {
-
-        document.getElementById('bienvenida').classList.add('mostrar');
-    }
+    datosUsuario ? (
+        usuario.nombre = JSON.parse(datosUsuario).nombre,
+        usuario.tarjetas = (JSON.parse(datosUsuario).tarjetas || []),
+        document.getElementById('configuracion').classList.add('mostrar')
+    ) : (
+        document.getElementById('bienvenida').classList.add('mostrar')
+    );
 });
+
 
 document.getElementById('iniciar').addEventListener('click', function () {
     let nombreUsuario = document.getElementById('nombreUsuario').value.trim();
-    if (validarNombre(nombreUsuario)) {
-        usuario.nombre = nombreUsuario;
-        guardarUsuarioEnLocalStorage();
-        
-    
-        document.getElementById('bienvenida').classList.remove('mostrar');
-        document.getElementById('configuracion').classList.add('mostrar');
-    } else {
-        alert("Por favor, ingrese un nombre válido.");
-    }
+    validarNombre(nombreUsuario) ? (
+        usuario.nombre = nombreUsuario,
+        guardarUsuarioEnLocalStorage(),
+        document.getElementById('bienvenida').classList.remove('mostrar'),
+        document.getElementById('configuracion').classList.add('mostrar')
+    ) : alert("Por favor, ingrese un nombre válido.");
 });
 
-function guardarUsuarioEnLocalStorage() {
 
+function guardarUsuarioEnLocalStorage() {
     let usuarioParaGuardar = {
         nombre: usuario.nombre,
         tarjetas: usuario.tarjetas
@@ -185,25 +152,6 @@ function guardarUsuarioEnLocalStorage() {
 const toggleThemeButton = document.getElementById('toggleTheme');
 const body = document.body;
 
+toggleThemeButton.addEventListener('click', () => body.classList.contains('dark-theme') ? (body.classList.remove('dark-theme'), localStorage.setItem('theme', 'light')) : (body.classList.add('dark-theme'), localStorage.setItem('theme', 'dark')));
 
-toggleThemeButton.addEventListener('click', function() {
-
-    const isDarkMode = body.classList.contains('dark-theme');
-
-    if (isDarkMode) {
-        body.classList.remove('dark-theme');
-
-        localStorage.setItem('theme', 'light');
-    } else {
-        body.classList.add('dark-theme');
-
-        localStorage.setItem('theme', 'dark');
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const theme = localStorage.getItem('theme');
-    if (theme === 'dark') {
-        body.classList.add('dark-theme');
-    }
-});
+document.addEventListener('DOMContentLoaded', () => (localStorage.getItem('theme') === 'dark' ? body.classList.add('dark-theme') : null));
