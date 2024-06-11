@@ -149,3 +149,4 @@ const body = document.body;
 toggleThemeButton.addEventListener('click', () => body.classList.contains('dark-theme') ? (body.classList.remove('dark-theme'), localStorage.setItem('theme', 'light')) : (body.classList.add('dark-theme'), localStorage.setItem('theme', 'dark')));
 
 document.addEventListener('DOMContentLoaded', () => (localStorage.getItem('theme') === 'dark' ? body.classList.add('dark-theme') : null));
+
