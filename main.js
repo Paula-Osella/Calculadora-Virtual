@@ -4,14 +4,52 @@ let usuario = {
     gastos: []
 };
 
-document.getElementById('iniciar').addEventListener('click', () => validarNombre(nombreUsuario = document.getElementById('nombreUsuario').value.trim()) ? (usuario.nombre = nombreUsuario, guardarUsuarioEnLocalStorage(), document.getElementById('bienvenida'), document.getElementById('configuracion').style.display = 'block') : alert("Por favor, ingrese un nombre válido."));
 
-document.getElementById("nombreUsuario").addEventListener('keydown', event => event.key === "Enter" ? (validarNombre(nombreUsuario = document.getElementById('nombreUsuario').value.trim()) ? (usuario.nombre = nombreUsuario, guardarUsuarioEnLocalStorage(), document.getElementById('configuracion').style.display = 'block') : alert("Por favor, ingrese un nombre válido.")) : null);
-
+// POR ACA LISTO! APLICADO EL SWEETALERT2
 function validarNombre(nombre) {
-    return isNaN(nombre) && nombre.trim() !== "";
+    return nombre.trim() !== '';
 }
 
+function mostrarError() {
+    Swal.fire({
+        icon: 'error',
+        title: 'Campo vacio',
+        text: 'Por favor, ingrese un nombre válido.',
+    });
+}
+
+// Event listeners
+document.getElementById('iniciar').addEventListener('click', function () {
+    const nombreUsuario = document.getElementById('nombreUsuario').value.trim();
+
+    validarNombre(nombreUsuario) ? (usuario.nombre = nombreUsuario, guardarUsuarioEnLocalStorage(), document.getElementById('bienvenida').style.display = 'none', document.getElementById('configuracion').style.display = 'block') : mostrarError();
+
+});
+
+document.getElementById('nombreUsuario').addEventListener('keydown', function (event) {
+
+    (event.key === 'Enter') && (event.preventDefault(), validarNombre(nombreUsuario = document.getElementById('nombreUsuario').value.trim()) ? (usuario.nombre = nombreUsuario, guardarUsuarioEnLocalStorage(), document.getElementById('bienvenida').style.display = 'none', document.getElementById('configuracion').style.display = 'block') : mostrarError());
+
+});
+
+// Función para guardar usuario en localStorage (puedes ajustar según tus necesidades)
+function guardarUsuarioEnLocalStorage() {
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+}
+
+// Ejemplo de función validarNombre (debe definirla según su lógica)
+function validarNombre(nombre) {
+    return nombre.length > 0;
+}
+
+// Ejemplo de función guardarUsuarioEnLocalStorage (debe definirla según su lógica)
+function guardarUsuarioEnLocalStorage() {
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+//POR EL MOMENTO ESTE ESTA SWEETALERT
 function validarNumeroPositivo(numero) {
     return !isNaN(numero) && parseFloat(numero) > 0;
 }
@@ -27,6 +65,14 @@ document.getElementById('calcular').addEventListener('click', function () {
     gastosServicios = parseFloat(gastosServicios);
     gastosComidaSemana = parseFloat(gastosComidaSemana);
 
+    // Validación de campos vacíos
+    const camposVacios = [semanas, ganancia, gastosServicios, gastosComidaSemana].some(valor => valor === '' || isNaN(valor));
+    if (camposVacios) {
+        mostrarError();
+        return; // Detener la ejecución si hay campos vacíos
+    }
+
+    // Validación de valores positivos
     const validInputs = [semanas, ganancia, gastosServicios, gastosComidaSemana].every(validarNumeroPositivo);
     validInputs ? (
         usuario.gastos.push({ tipo: 'Servicio', descripcion: 'Gastos en servicios', monto: gastosServicios }),
@@ -42,9 +88,20 @@ document.getElementById('calcular').addEventListener('click', function () {
         document.getElementById('resultado').style.display = 'block',
 
         guardarUsuarioEnLocalStorage()
-    ) : alert("Por favor, ingrese valores válidos.");
+    ) : alert("Por favor, ingrese valores válidos.");   //chequear este
 });
 
+
+function mostrarError() {
+    Swal.fire({
+        icon: 'error',
+        title: 'Campos vacíos',
+        text: 'Por favor, complete todos los campos con valores válidos.',
+    });
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function calcularAhorro(ganancia, gastos) {
     let ahorroMes = ganancia - gastos;
@@ -52,7 +109,7 @@ function calcularAhorro(ganancia, gastos) {
     return { semana: ahorroSemana, mes: ahorroMes };
 }
 
-document.getElementById('mostrarGastos').addEventListener('click', function ()  {
+document.getElementById('mostrarGastos').addEventListener('click', function () {
     document.getElementById('resultado').style.display = 'none';
     document.getElementById('gastos').style.display = 'block';
     mostrarGastos();
@@ -105,33 +162,61 @@ function buscarGasto(descripcion) {
 
 }
 
+
+//TARJETA DE CREDITO LISTO CON EL SWEET ALERT
 document.getElementById('agregarTarjeta').addEventListener('click', function () {
-    let input, gastosTarjeta;
+    Swal.fire({
+        icon: 'question',
+        title: '¿Agregar tarjeta de crédito?',
+        text: '¿Desea agregar tarjeta de credito?',
+        showCancelButton: true,
+        confirmButtonText: 'Sí',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let input, gastosTarjeta;
 
-    while (true) {
-        input = prompt("Ingrese los gastos mensuales de la tarjeta de crédito (o presione Cancelar para salir)");
-        
-        if (input === null || input.trim() === "") break;
-
-        gastosTarjeta = !isNaN(parseFloat(input)) && parseFloat(input) > 0 ? parseFloat(input) : NaN;
-
-        if (isNaN(gastosTarjeta)) {
-            alert("Por favor, ingrese un número válido para los gastos de la tarjeta de crédito");
-        } else {
-            let tarjeta = { tipo: 'Tarjeta de Crédito', descripcion: 'Gastos de tarjeta de crédito', monto: gastosTarjeta };
-            usuario.tarjetas.push(tarjeta);
-            usuario.gastos.push(tarjeta);
-            guardarUsuarioEnLocalStorage();
-            break;
+            Swal.fire({
+                icon: 'question',
+                title: 'Gastos mensuales de la tarjeta de crédito',
+                text: 'Ingrese los gastos mensuales de la tarjeta de crédito:',
+                input: 'text',
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Aceptar',
+                preConfirm: (value) => {
+                    if (!value.trim()) {
+                        Swal.showValidationMessage('Por favor, ingrese un valor.');
+                    } else if (isNaN(parseInt(value)) || parseInt(value) <= 0) {
+                        Swal.showValidationMessage('Por favor, ingrese un número válido mayor que cero.');
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    gastosTarjeta = parseInt(result.value);
+                    let tarjeta = { tipo: 'Tarjeta de Crédito', descripcion: 'Gastos de tarjeta de crédito', monto: gastosTarjeta };
+                    usuario.tarjetas.push(tarjeta);
+                    usuario.gastos.push(tarjeta);
+                    guardarUsuarioEnLocalStorage();
+                }
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire('Cancelado', 'No se agregó ninguna tarjeta de crédito.', 'info');
         }
-    }
+    });
 });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 document.getElementById('finalizar').addEventListener('click', function () {
     document.getElementById('gastos').style.display = 'none';
     document.getElementById('saludoFinal').style.display = 'block';
-    document.getElementById('saludoUsuario').textContent = `¡Gracias ${usuario.nombre} por usar nuestra aplicación!`;
+
+    // Mostrar SweetAlert con el tema Nyan Cat
+    Swal.fire({
+        icon: 'success',
+        title: `¡Gracias ${usuario.nombre} por utilizar nuestra aplicación!`,
+    });
 });
 
 
@@ -156,6 +241,7 @@ function guardarUsuarioEnLocalStorage() {
 
 const toggleThemeButton = document.getElementById('toggleTheme');
 const body = document.body;
+
 
 toggleThemeButton.addEventListener('click', () => body.classList.contains('dark-theme') ? (body.classList.remove('dark-theme'), localStorage.setItem('theme', 'light')) : (body.classList.add('dark-theme'), localStorage.setItem('theme', 'dark')));
 
