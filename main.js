@@ -106,16 +106,27 @@ function buscarGasto(descripcion) {
 }
 
 document.getElementById('agregarTarjeta').addEventListener('click', function () {
-    let gastosTarjeta = parseFloat(prompt("Ingrese los gastos mensuales de la tarjeta de crédito"));
-    while (!validarNumeroPositivo(gastosTarjeta)) {
-        gastosTarjeta = parseFloat(prompt("Por favor, ingrese un número válido para los gastos de la tarjeta de crédito"));
-    }
+    let input, gastosTarjeta;
 
-    let tarjeta = { tipo: 'Tarjeta de Crédito', descripcion: 'Gastos de tarjeta de crédito', monto: gastosTarjeta };
-    usuario.tarjetas.push(tarjeta);
-    usuario.gastos.push(tarjeta);
-    guardarUsuarioEnLocalStorage();
+    while (true) {
+        input = prompt("Ingrese los gastos mensuales de la tarjeta de crédito (o presione Cancelar para salir)");
+        
+        if (input === null || input.trim() === "") break;
+
+        gastosTarjeta = !isNaN(parseFloat(input)) && parseFloat(input) > 0 ? parseFloat(input) : NaN;
+
+        if (isNaN(gastosTarjeta)) {
+            alert("Por favor, ingrese un número válido para los gastos de la tarjeta de crédito");
+        } else {
+            let tarjeta = { tipo: 'Tarjeta de Crédito', descripcion: 'Gastos de tarjeta de crédito', monto: gastosTarjeta };
+            usuario.tarjetas.push(tarjeta);
+            usuario.gastos.push(tarjeta);
+            guardarUsuarioEnLocalStorage();
+            break;
+        }
+    }
 });
+
 
 document.getElementById('finalizar').addEventListener('click', function () {
     document.getElementById('gastos').style.display = 'none';
