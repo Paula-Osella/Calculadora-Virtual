@@ -81,7 +81,7 @@ document.getElementById('calcular').addEventListener('click', function () {
         gastosTotales = usuario.gastos.reduce((total, gasto) => total + gasto.monto, 0),
         ahorro = calcularAhorro(ganancia, gastosTotales),
 
-        document.getElementById('ahorroSemana').textContent = `Estás ahorrando $${ahorro.semana.toFixed(2)} por semana.`,
+        document.getElementById('ahorroSemana').textContent = `Su ahorro es de $${ahorro.semana.toFixed(2)} por semana.`,
         document.getElementById('ahorroMes').textContent = `Estás ahorrando $${ahorro.mes.toFixed(2)} en el mes.`,
 
         document.getElementById('configuracion').style.display = 'none',
@@ -132,11 +132,19 @@ function mostrarGastos() {
         return;
     }
 
+    let totalGastos = 0;
+
     usuario.gastos.forEach((gasto, index) => {
+        totalGastos += gasto.monto;
         console.log(`Agregando gasto: ${index + 1}. ${gasto.tipo} - ${gasto.descripcion}: $${gasto.monto.toFixed(2)}`);
         listaGastos.innerHTML += `<p>${index + 1}. ${gasto.tipo} - ${gasto.descripcion}: $${gasto.monto.toFixed(2)}</p>`;
     });
+
+    let totalGastosElemento = document.createElement('p');
+    totalGastosElemento.textContent = `Total de gastos en el mes: $${totalGastos.toFixed(2)}`;
+    listaGastos.appendChild(totalGastosElemento);
 }
+
 
 
 document.getElementById('buscar').addEventListener('click', function () {
@@ -167,8 +175,7 @@ function buscarGasto(descripcion) {
 document.getElementById('agregarTarjeta').addEventListener('click', function () {
     Swal.fire({
         icon: 'question',
-        title: '¿Agregar tarjeta de crédito?',
-        text: '¿Desea agregar tarjeta de credito?',
+        title: '¿Desea agregar tarjeta de credito?',
         showCancelButton: true,
         confirmButtonText: 'Sí',
         cancelButtonText: 'Cancelar'
@@ -178,8 +185,7 @@ document.getElementById('agregarTarjeta').addEventListener('click', function () 
 
             Swal.fire({
                 icon: 'question',
-                title: 'Gastos mensuales de la tarjeta de crédito',
-                text: 'Ingrese los gastos mensuales de la tarjeta de crédito:',
+                title: '¿Cual es el consumo de tu tarjeta de credito por mes?',
                 input: 'text',
                 showCancelButton: true,
                 cancelButtonText: 'Cancelar',
