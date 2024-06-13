@@ -1,4 +1,92 @@
 /* Estilo para ocultar un elemento */
+
+body {
+    background-color: rgba(217, 58, 151, 0.507);
+}
+
+.titulo_principal {
+    margin-top: 200px;
+    font-size: 35px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+
+}
+
+.titulo_principal i {
+    padding: 15px;
+}
+
+.nombreuser{
+    text-align: center;
+    width: 250px;
+    height: 25px;
+    margin-bottom: 10px;
+}
+.containter_user{
+    
+    display: flex;
+flex-direction: column;
+align-items: center;
+
+
+}
+.boton_iniciar {
+    background: linear-gradient(rgba(232, 1, 94, 0.897), rgb(232, 134, 232));
+    border: black 1px solid;
+    color: white;
+    margin: auto;
+    width: 20rem;
+    height: 27px;
+    margin: 0.1rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.boton_iniciar:hover {
+    background: linear-gradient(rgba(255, 106, 165, 0.871), rgb(232, 134, 232));
+    color: black;
+    color: black;
+    border: solid black 1px;
+}
+
+/* styles.css */
+.swal2-popup {
+    font-size: 1rem; /* Cambia el tamaño de la fuente del contenido de la alerta */
+    background-color: #e2cade; /* Cambia el color de fondo de la alerta */
+    border-radius: 10px; /* Cambia el radio del borde de la alerta */
+}
+
+.swal2-title {
+    color: #bb1b53; /* Cambia el color del título */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+}
+.swal2-title {
+    color: #bb1b53; /* Cambia el color del título */
+    font-family: 'Arial', sans-serif; /* Cambia la fuente del título */
+}
+
+.swal2-content {
+    color: #08090a; /* Cambia el color del texto del contenido */
+}
+
+.swal2-confirm{
+    background-color: #50244a; /* Cambia el color de fondo del botón de confirmación */
+    color: white;
+    border: none; 
+    border-radius: 5px; /* Cambia el radio del borde del botón */
+    padding: 10px 20px; /* Cambia el relleno del botón */
+}
+
+.swal2-confirm:hover {
+    background-color: #cf2b9e; /* Cambia el color de fondo del botón cuando se pasa el cursor por encima */
+}
+
+.swal2-icon.swal2-error {
+    border-color: #db6969; /* Cambia el color del borde del icono de error */
+    color: #f44336;
+}
+
+
+
 .oculto {
     display: none;
 }
@@ -8,14 +96,13 @@
     display: block;
 }
 
-.ocultar{
+.ocultar {
     display: none;
-    
+
 }
 
 .dark-theme {
     background-color: #333;
     color: #fff;
-    
-}
 
+}

@@ -16,10 +16,16 @@
     <button id="toggleTheme"><i class="bi bi-moon-fill"></i></button>
 
     <div id="bienvenida">
-        <h2>Bienvenido/a a tu Ahorrador Virtual</h2>
-        <input type="text" id="nombreUsuario" placeholder="Ingrese su nombre">
-        <button id="iniciar">Iniciar</button>
+        <h1 class="titulo_principal">Bienvenido/a a tu Ahorrador Virtual<i class="bi bi-piggy-bank"></i></h1>
+        <div class="containter_user">
+        <input type="text" id="nombreUsuario" class="nombreuser" placeholder="Ingrese su nombre">
+        <button class="btn btn boton_iniciar d-block mx-auto" id="iniciar">Iniciar</button>
     </div>
+    </div>
+
+
+
+
 
 
     <div id="app">
@@ -45,7 +51,7 @@
             <p id="ahorroMes"></p>
             <button id="mostrarGastos">Mostrar Gastos</button>
         </div>
-        
+
         <div id="gastos" class="ocultar">
             <h2>Gastos Ingresados</h2>
             <div id="listaGastos"></div>
@@ -57,11 +63,11 @@
 
         <div id="saludoFinal" class="ocultar">
             <h2 id="saludoUsuario"></h2>
-            
+
         </div>
     </div>
 
-    
+
 
     <script src="main.js"></script>
 
