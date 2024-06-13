@@ -1,8 +1,8 @@
-/* Estilo para ocultar un elemento */
-
 body {
     background-color: rgba(217, 58, 151, 0.507);
 }
+
+/* PRINCIPAL */
 
 .titulo_principal {
     margin-top: 200px;
@@ -16,28 +16,31 @@ body {
     padding: 15px;
 }
 
-.nombreuser{
+.nombreuser {
     text-align: center;
     width: 250px;
     height: 25px;
     margin-bottom: 10px;
 }
-.containter_user{
-    
+
+.containter_user {
+
     display: flex;
-flex-direction: column;
-align-items: center;
+    flex-direction: column;
+    align-items: center;
 
 
 }
+
 .boton_iniciar {
     background: linear-gradient(rgba(232, 1, 94, 0.897), rgb(232, 134, 232));
     border: black 1px solid;
     color: white;
     margin: auto;
     width: 20rem;
-    height: 27px;
+    height: 30px;
     margin: 0.1rem;
+    font-size: 1rem;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
@@ -48,45 +51,202 @@ align-items: center;
     border: solid black 1px;
 }
 
-/* styles.css */
+/* AGREGAR GASTOS */
+.boton-agregar {
+    background: linear-gradient(rgba(142, 46, 84, 0.897), rgb(232, 134, 232));
+    border: black 1px solid;
+    color: white;
+    width: 15rem;
+    height: 27px;
+    margin: 1rem;
+    font-size: 1rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.boton-agregar:hover {
+    background: linear-gradient(rgba(124, 16, 59, 0.871), rgb(232, 134, 232));
+    color: black;
+    color: black;
+    border: solid black 1px;
+}
+
+.boton-calcular {
+    background: linear-gradient(rgba(169, 6, 167, 0.897), rgb(232, 134, 232));
+    border: black 1px solid;
+    color: white;
+    width: 20rem;
+    height: 30px;
+    margin: 0.1rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    font-size: 1.2rem;
+}
+
+.boton-calcular:hover {
+    background: linear-gradient(rgba(197, 45, 106, 0.871), rgb(232, 134, 232));
+    color: black;
+    border: solid black 1px;
+}
+
+.titulo-ahorro {
+    margin-top: 100px;
+    font-size: 35px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+}
+
+.container-gastos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px;
+}
+
+.container-gastos input {
+    width: 400px;
+    padding: 5px;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+label {
+    font-size: 1.2rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* RESULTADO DE LOS GASTOS */
+.container_resultado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px;
+    margin: 150px;
+    font-size: 1.5rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.boton_mostrar_gastos {
+    background: linear-gradient(rgba(169, 6, 167, 0.897), rgb(232, 134, 232));
+    border: black 1px solid;
+    color: white;
+    width: 20rem;
+    height: 30px;
+    margin: 0.1rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    font-size: 1.2rem;
+}
+
+
+.boton_mostrar_gastos:hover {
+    background: linear-gradient(rgba(197, 45, 106, 0.871), rgb(232, 134, 232));
+    color: black;
+    border: solid black 1px;
+}
+
+/*  AHORRO / TOTALES */
+.containter_ahorro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    margin: 80px;
+    font-size: 1.5rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.espacio_buscar {
+    width: 300px;
+    height: 30px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.boton_buscar {
+    background: linear-gradient(rgba(169, 6, 167, 0.897), rgb(232, 134, 232));
+    border: black 1px solid;
+    color: white;
+    width: 20rem;
+    height: 30px;
+    margin: 1rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    font-size: 1.2rem;
+}
+
+.boton_buscar:hover {
+    background: linear-gradient(rgba(197, 45, 106, 0.871), rgb(232, 134, 232));
+    color: black;
+    border: solid black 1px;
+}
+
+.boton_finalizar {
+    background: linear-gradient(rgba(68, 32, 68, 0.897), rgb(232, 134, 232));
+    border: black 1px solid;
+    color: white;
+    width: 20rem;
+    margin: 20px;
+    height: 30px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    font-size: 1.2rem;
+}
+
+.boton_finalizar:hover {
+    background: linear-gradient(rgba(240, 60, 132, 0.871), rgb(232, 134, 232));
+    color: black;
+    border: solid black 1px;
+}
+
+/* ESTILOS SWEETALERT2 */
 .swal2-popup {
-    font-size: 1rem; /* Cambia el tamaño de la fuente del contenido de la alerta */
-    background-color: #e2cade; /* Cambia el color de fondo de la alerta */
-    border-radius: 10px; /* Cambia el radio del borde de la alerta */
+    font-size: 1rem;
+    /* Cambia el tamaño de la fuente del contenido de la alerta */
+    background-color: #e2cade;
+    /* Cambia el color de fondo de la alerta */
+    border-radius: 10px;
+    /* Cambia el radio del borde de la alerta */
 }
 
 .swal2-title {
-    color: #bb1b53; /* Cambia el color del título */
+    color: #bb1b53;
+    /* Cambia el color del título */
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
 }
+
 .swal2-title {
-    color: #bb1b53; /* Cambia el color del título */
-    font-family: 'Arial', sans-serif; /* Cambia la fuente del título */
+    color: #bb1b53;
+    /* Cambia el color del título */
+    font-family: 'Arial', sans-serif;
+    /* Cambia la fuente del título */
 }
 
 .swal2-content {
-    color: #08090a; /* Cambia el color del texto del contenido */
+    color: #08090a;
+    /* Cambia el color del texto del contenido */
 }
 
-.swal2-confirm{
-    background-color: #50244a; /* Cambia el color de fondo del botón de confirmación */
+.swal2-confirm {
+    background-color: #50244a;
+    /* Cambia el color de fondo del botón de confirmación */
     color: white;
-    border: none; 
-    border-radius: 5px; /* Cambia el radio del borde del botón */
-    padding: 10px 20px; /* Cambia el relleno del botón */
+    border: none;
+    border-radius: 5px;
+    /* Cambia el radio del borde del botón */
+    padding: 10px 20px;
+    /* Cambia el relleno del botón */
 }
 
 .swal2-confirm:hover {
-    background-color: #cf2b9e; /* Cambia el color de fondo del botón cuando se pasa el cursor por encima */
+    background-color: #cf2b9e;
+    /* Cambia el color de fondo del botón cuando se pasa el cursor por encima */
 }
 
 .swal2-icon.swal2-error {
-    border-color: #db6969; /* Cambia el color del borde del icono de error */
+    border-color: #db6969;
+    /* Cambia el color del borde del icono de error */
     color: #f44336;
 }
 
 
-
+/* ESTILOS GENERALES */
 .oculto {
     display: none;
 }
