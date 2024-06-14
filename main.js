@@ -66,11 +66,14 @@ document.getElementById('calcular').addEventListener('click', function () {
     gastosComidaSemana = parseFloat(gastosComidaSemana);
 
     // Validación de campos vacíos
+    // const camposVacios = [semanas, ganancia, gastosServicios, gastosComidaSemana].some(valor => valor === '' || isNaN(valor));
+    // if (camposVacios) {
+    //     mostrarError();
+    //     return; // Detener la ejecución si hay campos vacíos
+    // }
     const camposVacios = [semanas, ganancia, gastosServicios, gastosComidaSemana].some(valor => valor === '' || isNaN(valor));
-    if (camposVacios) {
-        mostrarError();
-        return; // Detener la ejecución si hay campos vacíos
-    }
+camposVacios ? (mostrarError(), true) : null;
+
 
     // Validación de valores positivos
     const validInputs = [semanas, ganancia, gastosServicios, gastosComidaSemana].every(validarNumeroPositivo);
