@@ -4,6 +4,9 @@ let usuario = {
     gastos: []
 };
 
+let totalGastos = 0;
+
+
 // Función para enviar datos del usuario al servidor
 function enviarDatosAlServidor(datos) {
     return new Promise((resolve, reject) => {
@@ -22,10 +25,10 @@ function enviarDatosAlServidor(datos) {
                 return response.json();
             })
             .then(data => {
-                resolve(data); // Resolvemos la promesa con los datos recibidos
+                resolve(data);
             })
             .catch(error => {
-                reject(error); // Rechazamos la promesa con el error capturado
+                reject(error);
             });
     });
 }
@@ -33,33 +36,15 @@ function enviarDatosAlServidor(datos) {
 // Event listener para iniciar sesión
 
 document.getElementById('nombreUsuario').addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        const nombreUsuario = document.getElementById('nombreUsuario').value.trim();
-        if (validarNombre(nombreUsuario)) {
-            usuario.nombre = nombreUsuario;
-            guardarUsuarioEnLocalStorage();
-            document.getElementById('bienvenida').style.display = 'none';
-            document.getElementById('configuracion').style.display = 'block';
-        } else {
-            mostrarError();
-        }
-    }
+    document.getElementById('nombreUsuario').addEventListener('keydown', event => event.key === 'Enter' && (event.preventDefault(), validarNombre(document.getElementById('nombreUsuario').value.trim()) ? (usuario.nombre = document.getElementById('nombreUsuario').value.trim(), guardarUsuarioEnLocalStorage(), document.getElementById('bienvenida').style.display = 'none', document.getElementById('configuracion').style.display = 'block') : mostrarError()));
+
 });
 
 document.getElementById('iniciar').addEventListener('click', function () {
     const nombreUsuario = document.getElementById('nombreUsuario').value.trim();
+    validarNombre(nombreUsuario) ? (usuario.nombre = nombreUsuario, guardarUsuarioEnLocalStorage(), document.getElementById('bienvenida').style.display = 'none', document.getElementById('configuracion').style.display = 'block') : mostrarError();
 
-    if (validarNombre(nombreUsuario)) {
-        usuario.nombre = nombreUsuario;
-        guardarUsuarioEnLocalStorage();
-        document.getElementById('bienvenida').style.display = 'none';
-        document.getElementById('configuracion').style.display = 'block';
-    } else {
-        mostrarError();
-    }
 });
-
 
 // Función para validar el nombre
 function validarNombre(nombre) {
@@ -76,14 +61,12 @@ function mostrarError() {
 }
 
 
-// Event listener para calcular y enviar datos al servidor
 document.getElementById('calcular').addEventListener('click', function () {
     let { value: semanas } = document.getElementById('semanas');
     let { value: ganancia } = document.getElementById('ganancia');
     let { value: gastosServicios } = document.getElementById('gastosServicios');
     let { value: gastosComidaSemana } = document.getElementById('gastosComidaSemana');
 
-    
     semanas = parseInt(semanas);
     ganancia = parseFloat(ganancia);
     gastosServicios = parseFloat(gastosServicios);
@@ -96,45 +79,73 @@ document.getElementById('calcular').addEventListener('click', function () {
     }
 
     const validInputs = [semanas, ganancia, gastosServicios, gastosComidaSemana].every(validarNumeroPositivo);
-    if (validInputs) {
-        usuario.gastos.push({ tipo: 'Servicio', descripcion: 'Gastos en servicios', monto: gastosServicios });
-        usuario.gastos.push({ tipo: 'Comida', descripcion: 'Gastos en comida por semana', monto: gastosComidaSemana });
-
-        const gastosTotales = usuario.gastos.reduce((total, gasto) => total + gasto.monto, 0);
-        const ahorro = calcularAhorro(ganancia, gastosTotales);
-
-        document.getElementById('ahorroSemana').textContent = `Su ahorro es de $${ahorro.semana.toFixed(2)} por semana.`;
-        document.getElementById('ahorroMes').textContent = `Estás ahorrando $${ahorro.mes.toFixed(2)} en el mes.`;
-
-        document.getElementById('configuracion').style.display = 'none';
-        document.getElementById('resultado').style.display = 'block';
-        guardarUsuarioEnLocalStorage();
-        enviarDatosAlServidor(usuario) // Enviamos los datos al servidor
-            .then(data => {
-                console.log('Promesa resuelta: datos enviados correctamente', data);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Datos enviados',
-                    text: 'Los datos se enviaron correctamente al servidor.',
-                });
-            })
-            .catch(error => {
-                console.error('Promesa rechazada: error al enviar los datos', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error al enviar datos',
-                    text: 'Hubo un error al intentar enviar los datos al servidor.',
-                });
-            });
-    } else {
+    if (!validInputs) {
         Swal.fire({
             icon: 'error',
-            title: 'Valores inválidos',
+            title: 'Campos vacios',
             text: 'Por favor, ingrese valores válidos.',
         });
-
+        return;
     }
+
+
+    Swal.fire({
+
+        icon: 'success',
+        title: 'Datos enviados',
+        text: 'Los datos se enviaron correctamente',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Si el usuario confirma, realizar los cálculos y enviar los datos
+            usuario.gastos.push({ tipo: 'Servicio', descripcion: 'Gastos en servicios', monto: gastosServicios });
+            usuario.gastos.push({ tipo: 'Comida', descripcion: 'Gastos en comida por semana', monto: gastosComidaSemana });
+
+            const gastosTotales = usuario.gastos.reduce((total, gasto) => total + gasto.monto, 0);
+            const ahorro = calcularAhorro(ganancia, gastosTotales);
+
+            document.getElementById('ahorroSemana').textContent = `Su ahorro es de $${ahorro.semana.toFixed(2)} por semana.`;
+            document.getElementById('ahorroMes').textContent = `Estás ahorrando $${ahorro.mes.toFixed(2)} en el mes.`;
+
+            document.getElementById('configuracion').style.display = 'none';
+            document.getElementById('resultado').style.display = 'block';
+            guardarUsuarioEnLocalStorage();
+
+            enviarDatosAlServidor(usuario) // Enviamos los datos al servidor
+                .then(data => {
+                    console.log('Promesa resuelta: datos enviados correctamente', data);
+
+                })
+                .catch(error => {
+                    console.log('Promesa rechazada: error al enviar los datos', error);
+;
+                });
+        }
+    });
 });
+
+// Función para validar números positivos
+function validarNumeroPositivo(numero) {
+    return !isNaN(numero) && parseFloat(numero) > 0;
+}
+
+// Función para calcular el ahorro
+function calcularAhorro(ganancia, gastos) {
+    let ahorroMes = ganancia - gastos;
+    let ahorroSemana = ahorroMes / 4;
+    return { semana: ahorroSemana, mes: ahorroMes };
+}
+
+
+// Función para guardar usuario en Local Storage
+function guardarUsuarioEnLocalStorage() {
+    let usuarioParaGuardar = {
+        nombre: usuario.nombre,
+        tarjetas: usuario.tarjetas
+    };
+    localStorage.setItem('usuario', JSON.stringify(usuarioParaGuardar));
+}
+
+
 
 // Función para validar números positivos
 function validarNumeroPositivo(numero) {
@@ -155,7 +166,7 @@ document.getElementById('mostrarGastos').addEventListener('click', function () {
     mostrarGastos();
 });
 
-// Función para mostrar los gastos actuales
+
 function mostrarGastos() {
     let listaGastos = document.getElementById('listaGastos');
     if (!listaGastos) {
@@ -173,7 +184,7 @@ function mostrarGastos() {
         return;
     }
 
-    let totalGastos = 0;
+
 
     usuario.gastos.forEach((gasto, index) => {
         totalGastos += gasto.monto;
@@ -211,6 +222,10 @@ function buscarGasto(descripcion) {
 
 // Event listener para agregar tarjeta de crédito
 document.getElementById('agregarTarjeta').addEventListener('click', function () {
+    mostrarPreguntaAgregarTarjeta();
+});
+
+function mostrarPreguntaAgregarTarjeta() {
     Swal.fire({
         icon: 'question',
         title: '¿Desea agregar tarjeta de crédito?',
@@ -219,44 +234,53 @@ document.getElementById('agregarTarjeta').addEventListener('click', function () 
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            Swal.fire({
-                icon: 'question',
-                title: '¿Cuál es el consumo de tu tarjeta de crédito por mes?',
-                input: 'text',
-                showCancelButton: true,
-                cancelButtonText: 'Cancelar',
-                confirmButtonText: 'Aceptar',
-                preConfirm: (value) => {
-                    if (!value.trim()) {
-                        Swal.showValidationMessage('Por favor, ingrese un valor.');
-                    } else if (isNaN(parseInt(value)) || parseInt(value) <= 0) {
-                        Swal.showValidationMessage('Por favor, ingrese un número válido mayor que cero.');
-                    } else {
-                        return value; // Devuelve el valor ingresado por el usuario
-                    }
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const gastosTarjeta = parseInt(result.value);
-                    const tarjeta = { tipo: 'Tarjeta de Crédito', descripcion: 'Gastos de tarjeta de crédito', monto: gastosTarjeta };
-
-                    usuario.tarjetas.push(tarjeta); // Agregar tarjeta a usuario
-                    usuario.gastos.push(tarjeta);   // Agregar gastos de tarjeta al usuario
-
-                    guardarUsuarioEnLocalStorage(); // Guardar usuario en local storage
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Tarjeta agregada',
-                        text: 'La tarjeta de crédito fue agregada correctamente.',
-                    });
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    Swal.fire('Cancelado', 'No se agregó ninguna tarjeta de crédito.', 'info');
-                }
-            });
+            mostrarConsumoTarjeta();
         }
     });
-});
+}
+
+function mostrarConsumoTarjeta() {
+    Swal.fire({
+        icon: 'question',
+        title: '¿Cuál es el consumo de tu tarjeta de crédito por mes?',
+        input: 'text',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Aceptar',
+        preConfirm: (value) => {
+            if (!value.trim()) {
+                Swal.showValidationMessage('Por favor, ingrese un valor.');
+            } else if (isNaN(parseInt(value)) || parseInt(value) <= 0) {
+                Swal.showValidationMessage('Por favor, ingrese un número válido mayor que cero.');
+            } else {
+                return value; // Devuelve el valor ingresado por el usuario
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const gastosTarjeta = parseInt(result.value);
+            agregarTarjeta(gastosTarjeta);
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire('Cancelado', 'No se agregó ninguna tarjeta de crédito.', 'info');
+        }
+    });
+}
+
+function agregarTarjeta(gastosTarjeta) {
+    const tarjeta = { tipo: 'Tarjeta de Crédito', descripcion: 'Gastos de tarjeta de crédito', monto: gastosTarjeta };
+
+    usuario.tarjetas.push(tarjeta); // Agregar tarjeta a usuario
+    usuario.gastos.push(tarjeta);   // Agregar gastos de tarjeta al usuario
+
+    guardarUsuarioEnLocalStorage(); // Guardar usuario en local storage
+
+    Swal.fire({
+        icon: 'success',
+        title: 'Tarjeta agregada',
+        text: 'La tarjeta de crédito fue agregada correctamente.',
+    });
+}
+
 document.getElementById('finalizar').addEventListener('click', function () {
     document.getElementById('gastos').style.display = 'none';
     document.getElementById('saludoFinal').style.display = 'block';
@@ -289,7 +313,6 @@ function guardarUsuarioEnLocalStorage() {
 
 const toggleThemeButton = document.getElementById('toggleTheme');
 const body = document.body;
-
 
 toggleThemeButton.addEventListener('click', () => body.classList.contains('dark-theme') ? (body.classList.remove('dark-theme'), localStorage.setItem('theme', 'light')) : (body.classList.add('dark-theme'), localStorage.setItem('theme', 'dark')));
 
