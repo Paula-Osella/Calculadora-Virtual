@@ -7,30 +7,27 @@ let usuario = {
 let totalGastos = 0;
 
 
-// Función para enviar datos del usuario al servidor
-function enviarDatosAlServidor(datos) {
-    return new Promise((resolve, reject) => {
-        fetch('https://jsonplaceholder.typicode.com/posts', {
+async function enviarDatosAlServidor(datos) {
+    try {
+        console.log('Datos a enviar:', datos);
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(datos)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    const error = new Error('Error en la respuesta del servidor');
-                    return reject(error);
-                }
-                return response.json();
-            })
-            .then(data => {
-                resolve(data);
-            })
-            .catch(error => {
-                reject(error);
-            });
-    });
+        });
+        console.log('Fetch response received:', response);
+        if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
+        }
+        const data = await response.json();
+        console.log('Data parsed to JSON:', data);
+        return data;
+    } catch (error) {
+        console.log('Error in fetch:', error);
+        throw error;
+    }
 }
 
 // Event listener para iniciar sesión
@@ -56,7 +53,7 @@ function mostrarError() {
     Swal.fire({
         icon: 'error',
         title: 'Campo vacío',
-        text: 'Por favor, ingrese un nombre válido.',
+        text: 'Por favor, ingrese lo solicitado.',
     });
 }
 
@@ -78,15 +75,6 @@ document.getElementById('calcular').addEventListener('click', function () {
         return;
     }
 
-    const validInputs = [semanas, ganancia, gastosServicios, gastosComidaSemana].every(validarNumeroPositivo);
-    if (!validInputs) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Campos vacios',
-            text: 'Por favor, ingrese valores válidos.',
-        });
-        return;
-    }
 
 
     Swal.fire({
@@ -101,7 +89,7 @@ document.getElementById('calcular').addEventListener('click', function () {
             usuario.gastos.push({ tipo: 'Comida', descripcion: 'Gastos en comida por semana', monto: gastosComidaSemana });
 
             const gastosTotales = usuario.gastos.reduce((total, gasto) => total + gasto.monto, 0);
-            const ahorro = calcularAhorro(ganancia, gastosTotales);
+            const ahorro = calcularAhorro(ganancia, gastosTotales, semanas);
 
             document.getElementById('ahorroSemana').textContent = `Su ahorro es de $${ahorro.semana.toFixed(2)} por semana.`;
             document.getElementById('ahorroMes').textContent = `Estás ahorrando $${ahorro.mes.toFixed(2)} en el mes.`;
@@ -111,14 +99,7 @@ document.getElementById('calcular').addEventListener('click', function () {
             guardarUsuarioEnLocalStorage();
 
             enviarDatosAlServidor(usuario) // Enviamos los datos al servidor
-                .then(data => {
-                    console.log('Promesa resuelta: datos enviados correctamente', data);
 
-                })
-                .catch(error => {
-                    console.log('Promesa rechazada: error al enviar los datos', error);
-;
-                });
         }
     });
 });
@@ -129,35 +110,13 @@ function validarNumeroPositivo(numero) {
 }
 
 // Función para calcular el ahorro
-function calcularAhorro(ganancia, gastos) {
+function calcularAhorro(ganancia, gastos, semanas) {
     let ahorroMes = ganancia - gastos;
-    let ahorroSemana = ahorroMes / 4;
+    let ahorroSemana = ahorroMes / semanas;
     return { semana: ahorroSemana, mes: ahorroMes };
 }
 
 
-// Función para guardar usuario en Local Storage
-function guardarUsuarioEnLocalStorage() {
-    let usuarioParaGuardar = {
-        nombre: usuario.nombre,
-        tarjetas: usuario.tarjetas
-    };
-    localStorage.setItem('usuario', JSON.stringify(usuarioParaGuardar));
-}
-
-
-
-// Función para validar números positivos
-function validarNumeroPositivo(numero) {
-    return !isNaN(numero) && parseFloat(numero) > 0;
-}
-
-// Función para calcular el ahorro
-function calcularAhorro(ganancia, gastos) {
-    let ahorroMes = ganancia - gastos;
-    let ahorroSemana = ahorroMes / 4;
-    return { semana: ahorroSemana, mes: ahorroMes };
-}
 
 // Función para mostrar los gastos
 document.getElementById('mostrarGastos').addEventListener('click', function () {
@@ -165,7 +124,6 @@ document.getElementById('mostrarGastos').addEventListener('click', function () {
     document.getElementById('gastos').style.display = 'block';
     mostrarGastos();
 });
-
 
 function mostrarGastos() {
     let listaGastos = document.getElementById('listaGastos');
@@ -202,7 +160,7 @@ document.getElementById('buscar').addEventListener('click', function () {
     buscar();
 });
 
-// Función para buscar gastos por descripción (similar al código anterior)
+// Función para buscar gastos por descripción 
 document.getElementById('buscarGasto').addEventListener('keydown', event => event.key === "Enter" ? buscar() : null);
 
 function buscar() {
