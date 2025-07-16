@@ -2,7 +2,6 @@
 
 Una aplicación interactiva en JavaScript puro que te ayuda a calcular tu ahorro mensual de forma simple y divertida. Podés ingresar tus ingresos, gastos y consumo con tarjeta, y ver cuánto dinero lográs ahorrar al mes y por semana.
 
-![Ahorrador Virtual](https://user-images.githubusercontent.com/00000000/ahorrador-virtual-preview.png) <!-- ← reemplazá este link por una captura si querés -->
 
 ---
 
